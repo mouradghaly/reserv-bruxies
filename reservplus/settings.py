@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os as os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-dx=2*^=7_p2woi!qr-^x7^0*#vn$)#$eb(@-i*&^5cf$euj(jn'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true" 
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(" ")
 
 
 # Application definition
@@ -58,9 +59,7 @@ ROOT_URLCONF = 'reservplus.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates')
-        ],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -81,10 +80,19 @@ WSGI_APPLICATION = 'reservplus.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':  'bruxies_trial_db',
+        'USER': 'bruxies_trial_db_user',
+        'PASSWORD': 'T7kSyDFXA4gee2vogi8dNjKeksJplM3n',
+        'HOST': 'T7kSyDFXA4gee2vogi8dNjKeksJplM3n@dpg-cpj0g2a1hbls73boejt0-a.oregon-postgres.render.com/bruxies_trial_db',
+        'PORT': 5432
+
     }
 }
+database_url = os.environ.get("DATABASE_URL")
+DATABASES["default"] = dj_database_url.parse(database_url)
+AUTHENTICATION_BACKENDS = [ 'django.contrib.auth.backends.RemoteUserBackend',
+]
 
 
 # Password validation
