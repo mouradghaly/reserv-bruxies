@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bruxies Reservation</title>
+    <link rel="icon" type="image/x-icon" href="/assets/bruxies.ico">
+    <style>
+        /* CSS for the whole page */
+        h1 {
+            text-align: center;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif; /* Set a fallback font */
+        }
+        
+        /* CSS for the background image */
+        .background-img {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place the image behind other content */
+            object-fit: cover; /* Cover the entire background */
+        }
+
+        /* CSS for form input fields */
+        .name, .lastname, .email, .phonenumber, .guests {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        /* CSS for date and time fields */
+        .date, .time {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* CSS for submit button */
+        button[type="submit"] {
+            width: 100%;
+            background-color: black;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* CSS for form container */
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto; /* Center the container horizontally */
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            opacity: 90%;
+        }
+
+        /* CSS for centered status div */
+        .status {
+            text-align: center;
+            margin-top: 10px; /* Space between form container and status */
+            font-size: 1.2em;
+            background-color: greenyellow;
+        }
+        .logo{
+            position: relative;
+            width: 150px; /* Size of the logo */
+            margin-bottom: 20px;
+           
+        }
+        .img {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="img">
+        <img class="logo" src="https://mir-s3-cdn-cf.behance.net/projects/404/d96311111022975.Y3JvcCw5OTksNzgyLDAsMTA4.png">
+    </div>
+    <div class="form-container">
+        <form class="form" method="post" id="form">
+            {% csrf_token %}
+            {{form}}
+            <button type="submit" id="submitbutton">Submit</button>
+        </form>
+    </div>
+
+    <div id="status" class="status"></div>
+    <script>
+        date_field = document.getElementsByClassName('date')
+        console.log(date_field.value)
+    </script><src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
+
+    <script>
+
+        async function checkavailability() {
+            const response = await fetch("http://127.0.0.1:8000/bruxies/check");
+            const recv_data = await response.json();
+            if (recv_data.msg === "Available") {
+                document.getElementById('status').innerHTML = "Reservation Confirmed, an email has just been sent";
+                status.style.backgroundColor = 'green';
+
+            }
+            if (recv_data.msg === "Not Available") {
+                alert("Not Available");
+            }
+            if (recv_data.msg === "Invalid"){
+                document.getElementById('status').innerHTML = "Invalid date selected";
+                let target = document.getElementById('status')
+                target.style.backgroundColor = "red"
+            }
+            if(recv_data.msg === "unfulfilled reservation"){
+                document.getElementById('status').innerHTML = `A reservation associated with the same coordinates has already been registered.<br>
+    Call <a href="tel:+201122246446">+20 1122246446</a> to inquire about a new reservation</a>`
+                let target = document.getElementById('status')
+                target.style.backgroundColor = "red"
+                
+            }
+        }
+    checkavailability();
+    </script>
+
+    <img class="background-img" src="https://www.pimula.net/wp-content/uploads/2022/02/br5.jpeg">
+</body>
+</html>
