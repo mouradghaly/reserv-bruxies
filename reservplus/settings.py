@@ -34,7 +34,6 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(" ")
 
 INSTALLED_APPS = [
     'bootstrap_datepicker_plus',
-    'django_apscheduler', 
     'bruxies',
     'django.contrib.admin',
     'django.contrib.auth',
