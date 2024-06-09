@@ -149,7 +149,7 @@ def admin(request):
     my_model = Reservations.objects.all()
     date_input = date_picker
     if request.session.get('usr') is None and request.session.get('password') is None:
-            return HttpResponseRedirect('http://127.0.0.1:8000/bruxies/authn')
+            return HttpResponseRedirect("https://reserv-bruxies.onrender.com/bruxies/autn")
     else:
         return render(request, "admin.html", {"Reservations": my_model, "date_input": date_input })
     
@@ -163,7 +163,7 @@ def authn(request):
             request.session['usr'] = usr
             request.session['password'] = password
             if usr == "Mourad":
-                return HttpResponseRedirect("http://127.0.0.1:8000/bruxies/admin")
+                return HttpResponseRedirect("https://reserv-bruxies.onrender.com/bruxies/admin")
             else :
                 return HttpResponseForbidden("We Know what you're trying to do ;)")
     else :
