@@ -149,7 +149,7 @@ def admin(request):
     my_model = Reservations.objects.all()
     date_input = date_picker
     if request.session.get('usr') is None and request.session.get('password') is None:
-            return HttpResponseRedirect("https://reserv-bruxies.onrender.com/bruxies/autn")
+            return HttpResponseRedirect("https://reserv-bruxies.onrender.com/bruxies/authn")
     else:
         return render(request, "admin.html", {"Reservations": my_model, "date_input": date_input })
     
