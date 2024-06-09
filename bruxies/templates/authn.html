@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <div class="container_logo">
+        <img class="logo" src="https://mir-s3-cdn-cf.behance.net/projects/404/d96311111022975.Y3JvcCw5OTksNzgyLDAsMTA4.png">
+        <title>Bruxie's Authentication </title>
+        <h1>Bruxie's Log In</h1>
+    </div>
+    <style>
+        /* Style for the background image */
+        .container_logo {
+            text-align: center;
+        }
+        .background-img {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover; /* Ensure image covers the entire background */
+        }
+
+        /* General style for the page and form container */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif; /* Use Arial as the font family */
+            background-color: #f0f0f0; /* Light gray background color for the body */
+        }
+
+        h1 {
+            text-align: center; /* Center the heading */
+            color: #333; /* Dark text color */
+            margin: 20px 0; /* Margin for the heading */
+        }
+
+        /* Style for the form container */
+        .form-container {
+            max-width: 400px; /* Fixed maximum width for the form container */
+            margin: 20px auto; /* Center the container horizontally with vertical margin */
+            padding: 20px; /* Padding inside the container */
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 5px; /* Rounded corners */
+            background-color: #f9f9f9; /* Light background color */
+            opacity: 90%;
+        }
+
+        /* Style for input fields */
+        input, select, textarea {
+            width: 100%; /* Inputs take the full width of the container */
+            padding: 10px; /* Padding for comfort */
+            margin: 8px 0; /* Spacing between elements */
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 4px; /* Rounded corners */
+            box-sizing: border-box; /* Ensures consistent sizing */
+        }
+
+        /* Style for the submit button */
+        button[type="submit"] {
+            width: 100%; /* Button spans the full width of the container */
+            background-color: black; /* Green background */
+            color: white; /* White text */
+            padding: 14px 20px; /* Padding for the button */
+            border: none; /* No border */
+            border-radius: 4px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s; /* Smooth transition on hover */
+        }
+
+        /* Hover effect for the submit button */
+        button[type="submit"]:hover {
+            background-color: #45a049; /* Slightly darker green on hover */
+        }
+        .logo {
+            width: 150px; /* Size of the logo */
+
+        }
+        .admin {
+            text-align: center;
+            max-width: 600px; /* Fixed maximum width for the form container */
+            margin: 20px auto; /* Center the container horizontally with vertical margin */
+            padding: 20px; /* Padding inside the container */
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 5px; /* Rounded corners */
+            background-color: #f9f9f9; /* Light background color */
+            opacity: 90%;
+        }
+    </style>
+</head>
+<body>
+    <section id="authentication">
+        <div class="form-container">
+            <form id="admin-form" method="post">
+                {% csrf_token %}
+                {{ form }}
+                <button type="submit">Submit</button> 
+            </form>
+        </div>
+    </section>
+
+    <section class="admin_panel" id="admin_panel">
+        <div class="admin">
+            {%for reservation in Reservations%}
+                <li> {{reservation.id }} {{ reservation.name }} {{reservation.lastname}} {{reservation.guests}} {{reservation.datee}} <button id="{{reservation.id}}">Button</button></li>
+            {%endfor%}
+        </div>
+
+    </section>
+    <script>
+     var consoleHolder = console;
+    function debug(bool){
+        if(!bool){
+            consoleHolder = console;
+            console = {};
+            Object.keys(consoleHolder).forEach(function(key){
+                console[key] = function(){};
+        })
+        }else{
+            console = consoleHolder;
+        }
+    console.hidden = function() {};
+}
+debug(false);
+    </script>
+    <script>
+// Function to get CSRF token from a meta tag
+function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
+// Element to listen for button clicks
+const admin_panel = document.getElementById('admin_panel');
+
+admin_panel.addEventListener('click', (event) => {
+    const clicked_element = event.target;
+
+    if (clicked_element.tagName === 'BUTTON') {
+        const buttonid = clicked_element.id; // In case you need to identify which button was clicked
+        const msg = {
+            'msg': 'Confirmed',
+            "id": buttonid
+        };
+
+        fetch('http://127.0.0.1:8000/bruxies/confirm', {
+            method: 'POST', 
+            body: JSON.stringify(msg), // Make sure to stringify the JSON
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken() // Include the CSRF token in the headers
+            }
+        })
+        .then((response) => {
+            return response.text();
+        })
+        .then((text) => {
+            alert(text); // Example action, you can change this
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+});
+
+    </script>
+    <script>
+    var ap = document.getElementById('admin_panel');
+    ap.hidden = true;
+       async function authn(){
+            response = await fetch("http://127.0.0.1:8000/bruxies/authn");
+            recv_data = await response.json();
+            if(recv_data.msg === "Authenticated"){
+                x = document.getElementById('authentication')
+                x.hidden = true;
+                ap.hidden = false;
+            }
+            if(recv_data.msg === "Unauthenticated"){
+                alert("Incorrect Username or Password");
+            }
+            if(recv_data.msg === "New Session"){
+
+            }
+        }     
+        
+        authn();
+    </script>
+    <img class="background-img" src="https://www.pimula.net/wp-content/uploads/2022/02/br6.jpeg">
+</body>
+</html>

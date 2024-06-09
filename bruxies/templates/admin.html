@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <div class="container_logo">
+        <img class="logo" src="https://mir-s3-cdn-cf.behance.net/projects/404/d96311111022975.Y3JvcCw5OTksNzgyLDAsMTA4.png">
+        <title>Bruxie's Admin Dashboard</title>
+        <h1> Admin Dashboard</h1>
+    </div>
+    <style>
+        /* Style for the background image */
+        .container_logo {
+            text-align: center;
+        }
+        .background-img {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            object-fit: cover; /* Ensure image covers the entire background */
+        }
+
+        /* General style for the page and form container */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif; /* Use Arial as the font family */
+            background-color: #f0f0f0; /* Light gray background color for the body */
+        }
+
+        h1 {
+            text-align: center; /* Center the heading */
+            color: #333; /* Dark text color */
+            margin: 20px 0; /* Margin for the heading */
+        }
+
+        /* Style for the form container */
+        .form-container {
+            max-width: 400px; /* Fixed maximum width for the form container */
+            margin: 20px auto; /* Center the container horizontally with vertical margin */
+            padding: 20px; /* Padding inside the container */
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 5px; /* Rounded corners */
+            background-color: #f9f9f9; /* Light background color */
+            opacity: 90%;
+        }
+
+        /* Style for input fields */
+        input, select, textarea {
+            width: 100%; /* Inputs take the full width of the container */
+            padding: 10px; /* Padding for comfort */
+            margin: 8px 0; /* Spacing between elements */
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 4px; /* Rounded corners */
+            box-sizing: border-box; /* Ensures consistent sizing */
+        }
+
+        /* Style for the submit button */
+        button[type="submit"] {
+            width: 100%; /* Button spans the full width of the container */
+            background-color: black; /* Green background */
+            color: white; /* White text */
+            padding: 14px 20px; /* Padding for the button */
+            border: none; /* No border */
+            border-radius: 4px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s; /* Smooth transition on hover */
+        }
+
+        /* Hover effect for the submit button */
+        button[type="submit"]:hover {
+            background-color: #45a049; /* Slightly darker green on hover */
+        }
+        .logo {
+            width: 150px; /* Size of the logo */
+
+        }
+        .admin {
+            text-align: center;
+            max-width: 1100px; /* Fixed maximum width for the form container */
+            margin: 20px auto; /* Center the container horizontally with vertical margin */
+            padding: 20px; /* Padding inside the container */
+            border: 1px solid #ccc; /* Light border */
+            border-radius: 5px; /* Rounded corners */
+            background-color: #f9f9f9; /* Light background color */
+            opacity: 90%;
+        }
+        .date_picker{            position: absolute; /* Position the picker relative to the admin panel */
+            top: 20px; /* Distance from the top */
+            left: 30px; /* Distance from the left */
+            width: 150px; /* Set width */
+            text-align: center; /* Center the text */
+            bottom: 20px;
+        }
+        .reservation {
+            margin: 20px;
+        }
+        .highlightgreen{
+            color: green;
+        }
+        .highlightred {
+            color: red;
+        }
+        .generate{
+            top: -5px;
+            left: 50px;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div class="generate" >
+        <button onclick="window.location.href='http://127.0.0.1:8000/bruxies/generate';"id="Generate">Export Report</button>
+    </div>
+    <section class="admin_panel" id="admin_panel">
+        <div id="date_picker" class="date_picker">
+            {{date_input}}
+        </div>
+        <div class="admin" id="admin">
+            {%for reservation in Reservations%}
+            <li class="reservation"
+            data-reservation-date="{{ reservation.datee }}" data-reservation-status="{{reservation.confirmed}}">
+            Reservation Number : {{ reservation.id }} | {{ reservation.name }} {{reservation.lastname}} | {{reservation.email}} | Guests : {{ reservation.guests }} |
+            {{ reservation.datee }} | {{ reservation.confirmed }} | Reservation made at : {{reservation.submission_time}}
+            <button id="{{ reservation.id }}">Confirm</button>
+        </li>
+            {%endfor%}
+        </div>
+    </section>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reservations = document.querySelectorAll(".reservation");
+            reservations.forEach((reservation) => {
+                const statusText = reservation.getAttribute("data-reservation-status");
+
+                // Highlight the words "Confirmed" and "Not Confirmed" in the text content
+                reservation.innerHTML = reservation.innerHTML.replace(/(Confirmed)/gi, '<span class="highlightgreen">$1</span>');
+                reservation.innerHTML = reservation.innerHTML.replace(/(Not Confirmed)/gi, '<span class="highlightred">$1</span>');
+
+                // Change background color based on the status
+                if (statusText === "Confirmed") {
+                    reservation.classList.add('confirmed');
+                }
+                if (statusText === "Not Confirmed") {
+                    reservation.classList.add('not-confirmed');
+                }
+            });
+        });
+    </script>
+<script>
+    const button = document.getElementById('Generate');
+    button.addEventListener('click', () => {
+        const date = document.getElementById('id_date').value;
+        fetch('http://127.0.0.1:8000/bruxies/generate', {
+            method: 'POST', 
+            body: JSON.stringify({date: date}), // Wrap date in an object and stringify it
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        })
+        .then(response => response.json()) // Parse the JSON response
+        .then(data => {
+            console.log(data.msg.date); // Access the parsed data
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+    <script>
+        var datePicker = document.getElementById("id_date");
+        document.addEventListener("DOMContentLoaded", () => {
+    
+            // Initial setup: hide the dashboard if no date is selected
+            if (datePicker.value === '') {
+                dash = document.getElementById('admin');
+                dash.style.display = 'none';
+            }
+    
+            // Add event listener to handle date change
+            datePicker.addEventListener("change", (event) => {
+                if (datePicker.value != '') {
+                    dash.style.display = 'block';
+                }
+    
+                const selectedDate = event.target.value; // Date from the picker (likely in YYYY-MM-DD)
+                console.log('Selected Date (raw):', selectedDate); // Debugging log
+    
+                // Convert the date to a more consistent format
+                const parsedDate = new Date(selectedDate);
+                const formattedSelectedDate = parsedDate.toLocaleDateString('en-US', { day: "numeric", month: "long",  year: 'numeric' }); // 'May 1, 2024'
+                console.log('Formatted Selected Date:', formattedSelectedDate); // Debugging log
+    
+                const reservations = document.querySelectorAll(".reservation");
+    
+                reservations.forEach((reservation) => {
+                    const reservationDate = reservation.getAttribute("data-reservation-date");
+    
+                    // Check if the formatted date matches the reservation date
+                    if (reservationDate === formattedSelectedDate) {
+                        reservation.style.display = "block"; // Show matching reservation
+                    } else {
+                        reservation.style.display = "none"; // Hide non-matching reservation
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        /*button = document.getElementById('submit');
+        document.addEventListener("click", () => {
+            date_field = document.getElementById('id_date');
+            date = date_field.value;
+            reservations = document.querySelectorAll(".reservation");
+
+            reservations.forEach((reservation) => {
+                reservationDate = reservation.getAttribute("data-reservation-date");
+                if (reservationDate === date){
+                    reservation.style.display = "block";
+                }
+            });   
+        })
+
+
+    </script>
+    <script>
+// Function to get CSRF token from a meta tag
+function getCSRFToken() {
+    return document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+}
+
+// Element to listen for button clicks
+const admin_panel = document.getElementById('admin_panel');
+
+admin_panel.addEventListener('click', (event) => {
+    const clicked_element = event.target;
+
+    if (clicked_element.tagName === 'BUTTON')  {
+        const buttonid = clicked_element.id;
+        const msg = {
+            msg: 'Confirmed',
+            id: buttonid
+        };
+
+        fetch('http://127.0.0.1:8000/bruxies/confirm', {
+            method: 'POST',
+            body: JSON.stringify(msg),
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
+            }
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json(); // Ensure the response is parsed as JSON
+        })
+        .then((data) => {
+            alert(data.msg); // Access the parsed data
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.'); // Handle errors gracefully
+        });
+    }
+});
+
+    </script>
+    <img class="background-img" src="https://www.pimula.net/wp-content/uploads/2022/02/br6.jpeg">
+</body>
+</html>
