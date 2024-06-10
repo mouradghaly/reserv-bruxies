@@ -153,12 +153,6 @@
                         console.error('Unexpected message:', recv_data.msg);
                         break;
                 }
-            } catch (error) {
-                console.error('An error occurred:', error);
-                const statusElement = document.getElementById('status');
-                statusElement.innerHTML = "An error occurred. Please try again later.";
-                statusElement.style.backgroundColor = 'red';
-            }
         }
 
         checkavailability();
