@@ -110,7 +110,7 @@
     <script>
 
         async function checkavailability() {
-            const response = await fetch("http://127.0.0.1:8000/bruxies/check");
+            const response = await fetch("https://reserv-bruxies/bruxies/check");
             const recv_data = await response.json();
             if (recv_data.msg === "Available") {
                 document.getElementById('status').innerHTML = "Reservation Confirmed, an email has just been sent";
