@@ -55,7 +55,7 @@ class Reservations(models.Model):
     guests = models.IntegerField(null=True)
     datee = models.DateField(max_length=10, null=True)
     time =  models.TimeField(null=True)
-    confirmed = models.CharField(default="Not Confirmed", max_length=3)
+    confirmed = models.CharField(default="Not Confirmed")
     submission_time = models.TimeField(null=True)
     target1_time = models.TimeField(null=True)
 
