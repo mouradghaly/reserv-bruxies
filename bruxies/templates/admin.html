@@ -114,7 +114,7 @@
 </head>
 <body>
     <div class="generate" >
-        <button onclick="window.location.href='http://127.0.0.1:8000/bruxies/generate';"id="Generate">Export Report</button>
+        <button onclick="window.location.href='https://reserv-bruxies/bruxies/generate';"id="Generate">Export Report</button>
     </div>
     <section class="admin_panel" id="admin_panel">
         <div id="date_picker" class="date_picker">
@@ -125,7 +125,7 @@
             <li class="reservation"
             data-reservation-date="{{ reservation.datee }}" data-reservation-status="{{reservation.confirmed}}">
             Reservation Number : {{ reservation.id }} | {{ reservation.name }} {{reservation.lastname}} | {{reservation.email}} | Guests : {{ reservation.guests }} |
-            {{ reservation.datee }} | {{ reservation.confirmed }} | Reservation made at : {{reservation.submission_time}}
+            {{ reservation.datee }} at : {{reservation.time}} | {{ reservation.confirmed }} | Reservation made at : {{reservation.submission_time}}
             <button id="{{ reservation.id }}">Confirm</button>
         </li>
             {%endfor%}
