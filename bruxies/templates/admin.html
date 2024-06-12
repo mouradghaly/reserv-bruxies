@@ -114,7 +114,7 @@
 </head>
 <body>
     <div class="generate" >
-        <button onclick="window.location.href='https://reserv-bruxies/bruxies/generate';"id="Generate">Export Report</button>
+        <button onclick="window.location.href='https://reserv-bruxies.onrender.com/bruxies/generate';"id="Generate">Export Report</button>
     </div>
     <section class="admin_panel" id="admin_panel">
         <div id="date_picker" class="date_picker">
@@ -155,7 +155,7 @@
     const button = document.getElementById('Generate');
     button.addEventListener('click', () => {
         const date = document.getElementById('id_date').value;
-        fetch('http://127.0.0.1:8000/bruxies/generate', {
+        fetch('https://reserv-bruxies.onrender.com/bruxies/generate', {
             method: 'POST', 
             body: JSON.stringify({date: date}), // Wrap date in an object and stringify it
             headers: {
@@ -247,7 +247,7 @@ admin_panel.addEventListener('click', (event) => {
             id: buttonid
         };
 
-        fetch('https://reserv-bruxies/bruxies/confirm', {
+        fetch('https://reserv-bruxies.onrender.com/bruxies/confirm', {
             method: 'POST',
             body: JSON.stringify(msg),
             headers: {
