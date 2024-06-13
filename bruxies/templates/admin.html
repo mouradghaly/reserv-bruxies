@@ -155,7 +155,7 @@
     const button = document.getElementById('Generate');
     button.addEventListener('click', () => {
         const date = document.getElementById('id_date').value;
-        fetch('https://reserv-bruxies.onrender.com/bruxies/generate', {
+        fetch('http://reserv-bruxies.onrender.com/generate', {
             method: 'POST', 
             body: JSON.stringify({date: date}), // Wrap date in an object and stringify it
             headers: {
@@ -166,11 +166,16 @@
         .then(response => response.json()) // Parse the JSON response
         .then(data => {
             console.log(data.msg.date); // Access the parsed data
+            window.location.href = "http://reser-bruxies.onrender.com/bruxies/generate";
         })
         .catch(error => {
             console.error('Error:', error);
-        });
-    });
+        });  });
+    button.addEventListener("click", () => {
+        setTimeout(function() {
+        window.location.href = "http://reserv-bruxies.onrender.com/bruxies/generate"; // Replace with your URL
+        }, 3000);
+    })
 </script>
     <script>
         var datePicker = document.getElementById("id_date");
