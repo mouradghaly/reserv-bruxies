@@ -208,44 +208,44 @@ def generate_report(request):
         return JsonResponse({"status": "Date set in session"})
 
     # Retrieve the date from the session and convert it back to a datetime object
-    date_str = request.session.get("date")
-    if date_str:
-        date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+    #date_str = request.session.get("date")
+    #if date_str:
+        #date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
         # Query the model using the date
-        my_model = Reservations.objects.filter(datee=date)
+        #my_model = Reservations.objects.filter(datee=date)
         
-        buffer = BytesIO()
-        p = canvas.Canvas(buffer)
-        p.drawImage("bruxies/assets/bruxies.ico", 500, 780, width=120, preserveAspectRatio=True, mask='auto')
-        p.setFont("Helvetica", 30)
-        p.drawString(5, 800, f'Confirmed Reservations on {date.strftime("%d-%m-%Y")}')
-        p.setFont("Helvetica", 15)
-        p.setAuthor("The CyberTechts - RESERV+")
-        p.setTitle(f"Confirmed Reservations on {date.strftime('%d-%m-%Y')}")
-        p.setCreator("RESERV+ build98238021gh")
-        p.setProducer("The CyberTechts Generate Module")
+        #buffer = BytesIO()
+        #p = canvas.Canvas(buffer)
+        #p.drawImage("bruxies/assets/bruxies.ico", 500, 780, width=120, preserveAspectRatio=True, mask='auto')
+        #p.setFont("Helvetica", 30)
+        #p.drawString(5, 800, f'Confirmed Reservations on {date.strftime("%d-%m-%Y")}')
+        #p.setFont("Helvetica", 15)
+        #p.setAuthor("The CyberTechts - RESERV+")
+        #p.setTitle(f"Confirmed Reservations on {date.strftime('%d-%m-%Y')}")
+        #p.setCreator("RESERV+ build98238021gh")
+        #p.setProducer("The CyberTechts Generate Module")
 
         # Iterate over the queryset and draw text for each object
-        reservations_per_date = 0
-        total_guests = 0
-        y_position = 700
-        for reservation in my_model:
-            string = f'{reservation.id} | {reservation.name} | {reservation.lastname} | {reservation.time} | {reservation.email} | {reservation.guests}'
-            p.drawString(100, y_position, string)
-            y_position -= 20
-            reservations_per_date += 1 
-            total_guests += int(reservation.guests)
-        p.setFont("Helvetica", 10)
-        p.drawString(200, 5, f'Total Guests : {total_guests} | Total Reservations : {reservations_per_date}')
-        now = datetime.datetime.now()
-        p.setFont("Helvetica", 8)
-        p.drawString(400, 5, f'Document generated on {now.strftime("%d-%m-%Y")}')
+        #reservations_per_date = 0
+        #total_guests = 0
+        #y_position = 700
+        #for reservation in my_model:
+            #string = f'{reservation.id} | {reservation.name} | {reservation.lastname} | {reservation.time} | {reservation.email} | {reservation.guests}'
+            #p.drawString(100, y_position, string)
+            #y_position -= 20
+            #reservations_per_date += 1 
+            #total_guests += int(reservation.guests)
+        #p.setFont("Helvetica", 10)
+        #p.drawString(200, 5, f'Total Guests : {total_guests} | Total Reservations : {reservations_per_date}')
+        #now = datetime.datetime.now()
+        #p.setFont("Helvetica", 8)
+        #p.drawString(400, 5, f'Document generated on {now.strftime("%d-%m-%Y")}')
 
-        p.showPage()
-        p.save()
-        buffer.seek(0)
-        request.session["date"] = None
-        return FileResponse(buffer, as_attachment=True, filename=f'{date_str} report.pdf')
+        #p.showPage()
+        #p.save()
+        #buffer.seek(0)
+        #request.session["date"] = None
+        #return FileResponse(buffer, as_attachment=True, filename=f'{date_str} report.pdf')
 
-    else:
-        return JsonResponse({"error": "Date not found in session"}, status=400)
+    #else:
+        #return JsonResponse({"error": "Date not found in session"}, status=400)
