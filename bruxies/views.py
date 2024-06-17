@@ -216,7 +216,7 @@ def generate_report(request):
         
         buffer = BytesIO()
         p = canvas.Canvas(buffer)
-        p.drawImage("bruxies/assets/bruxies.ico", 500, 780, width=120, preserveAspectRatio=True, mask='auto')
+        p.drawImage("https://raw.githubusercontent.com/mouradghaly/reserv-bruxies/main/bruxies/templates/bruxies.ico", 500, 780, width=120, preserveAspectRatio=True, mask='auto')
         p.setFont("Helvetica", 30)
         p.drawString(5, 800, f'Confirmed Reservations on {date.strftime("%d-%m-%Y")}')
         p.setFont("Helvetica", 15)
